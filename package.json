@@ -1,0 +1,17 @@
+{
+  "name": "pdfcreator",
+  "version": "1.0.0",
+  "description": "generate pdf from html template",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "KeeJayBe",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "html-pdf": "^2.2.0"
+  }
+}

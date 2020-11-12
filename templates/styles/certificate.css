@@ -1,0 +1,12 @@
+div{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    text-align: center;
+    align-items: center;
+}
+
+.logo{
+    height: 10rem;
+    width: 10rem;
+}

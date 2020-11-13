@@ -4,6 +4,7 @@ var pdf = require('html-pdf');
 var express = require("express");
 var bodyParser = require("body-parser");
 const sgMail = require('@sendgrid/mail');
+const { ok } = require('assert');
 
 const checkTime = 1000;
 
@@ -32,15 +33,52 @@ app.post("/mailcertificate", (req, res) =>{
     res.sendStatus(200);
 });
 
+app.post("/mailregistration", (req, res) => {
+    sendRegistrationConfirmation(req.body);
+    res.sendStatus(200);
+})
+
 app.get("/certificate/:id", (req, res) => {
     const id = req.params.id;
     res.download(`./certificates/${id}.pdf`);
 })
 
-app.get("/sendcertificate", (req, res) => {
-    sendCertificateMail(0, "Jordy", "Van Kerkvoorde", "jordy.vankerkvoorde@student.hogent.be");
-})
+// app.get("/sendcertificate", (req, res) => {
+//     sendCertificateMail(0, "Jordy", "Van Kerkvoorde", "jordy.vankerkvoorde@student.hogent.be");
+// })
 
+
+function sendRegistrationConfirmation(body){
+    const msg = {
+        to: [
+            {
+                email: body.email,
+                name: `${body.firstname} ${body.lastname}`
+            }
+        ], 
+        from: {
+            email: 'jordy.vankerkvoorde@student.hogent.be',
+            name: 'Damien Experience'
+        }, 
+        template_id: 'd-8f263c458c2b4f6eae85774bc34a8ee9',
+        dynamic_template_data: {
+            "FirstName": body.firstname,
+            "LastName": body.lastname,
+            "TourName": body.tourname,
+            "Distance": body.distance,
+            "Date": body.date
+        }
+    }
+      
+    sgMail
+    .send(msg)
+    .then(() => {
+        console.log(`Email registration confirmation to ${body.email} at ${new Date()}`)
+    })
+    .catch((error) => {
+        console.error(error)
+    })
+}
 
 function createCertificate(id, firstname, lastname, email, distance, date){
     var html = fs.readFileSync('./templates/certificate.html', 'utf8');
@@ -72,7 +110,7 @@ function sendCertificateMail(id, firstname, lastname, email){
                 const msg = {
                     to: [
                         {
-                            email: `${email}`,
+                            email: email,
                             name: `${firstname} ${lastname}`
                         }
                     ], 
@@ -83,8 +121,8 @@ function sendCertificateMail(id, firstname, lastname, email){
                     //subject: 'Sending with SendGrid is Fun',
                     template_id: 'd-cb844c22ba3e444fb0be079a8196acff',
                     dynamic_template_data: {
-                        "FirstName": "Jordy",
-                        "LastName": "Van Kerkvoorde",
+                        "FirstName": firstname,
+                        "LastName": lastname,
                     },
                     attachments: [
                         {

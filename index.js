@@ -19,13 +19,13 @@ app.listen(3000, () => {
 
 //curl -d "id=1&firstname=Jordy&lastname=Van Kerkvoorde&email=jordy.vankerkvoorde@student.hogent.be&distance=100km&date=14 mei 2020" -X POST http://localhost:3000/mailcertificate
 app.post("/mailcertificate", (req, res) =>{
+    console.log(req.body)
     var id = req.body.id;
     var firstname = req.body.firstname;
     var lastname = req.body.lastname;
     var email = req.body.email;
     var distance = req.body.distance;
     var date = req.body.date;
-
     
     createCertificate(id, firstname, lastname, email, distance, date);
 
@@ -58,11 +58,10 @@ function createCertificate(id, firstname, lastname, email, distance, date){
         console.log(res);
     });
 
-    sendCertificateMail(id, firstname, lastname, email);
+    //sendCertificateMail(id, firstname, lastname, email);
 }
 
 function sendCertificateMail(id, firstname, lastname, email){
-    console.log(id, firstname, lastname, email)
     setTimeout(() => {
         fs.readFile((`./certificates/${id}.pdf`), (err, data) => {
             if(err){

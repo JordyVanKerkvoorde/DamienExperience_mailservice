@@ -37,9 +37,9 @@ app.get("/certificate/:id", (req, res) => {
     res.download(`./certificates/${id}.pdf`);
 })
 
-// app.get("/sendcertificate", (req, res) => {
-//     sendCertificateMail(0);
-// })
+app.get("/sendcertificate", (req, res) => {
+    sendCertificateMail(0, "Jordy", "Van Kerkvoorde", "jordy.vankerkvoorde@student.hogent.be");
+})
 
 
 function createCertificate(id, firstname, lastname, email, distance, date){
@@ -58,7 +58,7 @@ function createCertificate(id, firstname, lastname, email, distance, date){
         console.log(res);
     });
 
-    //sendCertificateMail(id, firstname, lastname, email);
+    sendCertificateMail(id, firstname, lastname, email);
 }
 
 function sendCertificateMail(id, firstname, lastname, email){
@@ -66,7 +66,7 @@ function sendCertificateMail(id, firstname, lastname, email){
         fs.readFile((`./certificates/${id}.pdf`), (err, data) => {
             if(err){
                 console.log(err)
-                sendCertificateMail();
+                sendCertificateMail(id, firstname, lastname, email);
             }
             if(data){
                 const msg = {
@@ -99,7 +99,7 @@ function sendCertificateMail(id, firstname, lastname, email){
                 sgMail
                 .send(msg)
                 .then(() => {
-                    console.log('Email sent')
+                    console.log(`Email with certificate sent to ${email} at ${new Date()}`)
                 })
                 .catch((error) => {
                     console.error(error)

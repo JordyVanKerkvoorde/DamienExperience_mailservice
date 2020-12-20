@@ -14,6 +14,12 @@ var app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+})
+
 app.listen(3000, () => {
  console.log("Server running on port 3000");
 });
@@ -49,6 +55,7 @@ app.get("/certificate/:id", (req, res) => {
 
 
 function sendRegistrationConfirmation(body){
+    console.log("confirmation")
     const msg = {
         to: [
             {
@@ -100,6 +107,7 @@ function createCertificate(id, firstname, lastname, email, distance, date){
 }
 
 function sendCertificateMail(id, firstname, lastname, email){
+    console.log("certificate")
     setTimeout(() => {
         fs.readFile((`./certificates/${id}.pdf`), (err, data) => {
             if(err){
